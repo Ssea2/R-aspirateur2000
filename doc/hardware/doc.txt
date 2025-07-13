@@ -1,0 +1,22 @@
+Capteurs : 
+ - Lidar Collision : https://www.gotronic.fr/art-capteur-de-distance-lidar-pol4064-33132.htm
+ - MicroRupteur    : https://www.gotronic.fr/art-microrupteur-sps75gc-4324.htm
+ - INA 226         : https://github.com/RobTillaart/INA226
+ 					 https://deepbluembedded.com/ina226-with-arduino-dc-current-sensor-ina226-library-code/
+ - OLED Screen     : https://github.com/adafruit/Adafruit_SSD1306
+ 				     https://startingelectronics.org/tutorials/arduino/modules/OLED-128x32-I2C-display/
+
+Controle : 
+ - Driver          : https://www.gotronic.fr/art-commande-moteur-cc-2x3-a-mdd3a-37255.htm
+ - Nano RP2040     : https://www.gotronic.fr/art-arduino-nano-rp2040-connect-abx00053-33537.htm
+
+Alimentation :
+ - Batterie 6V     : https://www.gotronic.fr/art-batterie-ps640gb-5661.htm
+ - Chargeur Plomb  : https://www.gotronic.fr/art-chargeur-2-6-et-12-vcc-al300pro-29035.htm
+
+Mecanique : 
+ - Moteur Roues    : https://www.gotronic.fr/art-motoreducteur-encodeur-fit0521-27897.htm
+ - Moyeu Roue      : https://www.gotronic.fr/art-moyeu-alu-pour-axe-4-mm-2672-27434.htm
+ - Roue 70mm       : https://www.gotronic.fr/art-roue-scooter-noire-70x25-mm-3272-27430.htm
+ - Roue Libre      : https://www.gotronic.fr/art-roue-libre-1-2-953-21790.htm
+

@@ -1,7 +1,7 @@
 import serial 
 import matplotlib.pyplot as plt
 import numpy as np
-
+import time 
 
 arduino = serial.Serial(port="/dev/ttyACM0", baudrate=9600)
 
@@ -15,26 +15,31 @@ def write_data(x):
 
 Ls = []
 Rs = []
+c=0
 
-while True:
+"""while True:
     value  = read_data()
-    c,x,y= str(value)[2:-3].split(",")
+    L,R= str(value)[2:-3].split(",")
     print(" \n\n")
     print(value)
     print(c)
-    print("L",x)
-    print("R",y)
+    print("L",L)
+    print("R",R)
     print(" \n\n")
-    Ls.append(x)
-    Rs.append(y)
-    if float(c)>=127.0:
+    Ls.append(L)
+    Rs.append(R)
+    print(c)
+    if c>=10000:
         break
+    else:
+        c+=1
+        time.sleep(0.001)
+"""
 
 
-
-with open("encodeur_value.txt","w+") as file:
+"""with open("encodeur_value.txt","w+") as file:
     data = str(Ls)+";"+str(Rs)
-    file.write(data)
+    file.write(data)"""
 
 
 with open("encodeur_value.txt", "r") as file:

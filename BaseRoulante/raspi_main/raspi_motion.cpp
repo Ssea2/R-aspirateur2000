@@ -102,3 +102,92 @@ int forward(int speed){
   Serial.print(speed);
   Serial.println();
 }*/
+
+
+/*
+
+void rotate(float angle, int speed=50){
+  int dirL=1;
+  int dirR=1;
+
+  if (angle >0){
+    dirL=-1;
+    dirR=1;
+  }
+  else if (angle < 0){
+    dirL=1;
+    dirR=-1;
+  }
+  int target = dirL*angle2encodervalue(angle);
+  speed_left = speed*dirL;
+  speed_right = (COEFR2L * speed)*dirR;
+  motor_Left.setSpeed(speed_left); motor_Right.setSpeed(speed_right);
+  while (dirL*posi < target){
+    int e = dirL*target - dirL*posi;
+    Serial.print(e);
+    Serial.print("||");
+    Serial.print(posi);
+    Serial.println();
+  }
+  delay(3000);
+  motor_Left.setSpeed(0); motor_Right.setSpeed(0);
+  }
+
+  
+float wheel_perimeter = PI*DIAM_WHEEL; 
+
+
+
+void ForBackWard(float dist, int speed=50){
+  int dir;
+  if (dist > 0){
+    dir = 1;
+  }
+  else{
+    dir=-1;
+  }
+  int target = dir*dist2encodeurvalue(dist);
+  Serial.println(target);
+  delay(3000);
+  speed_left = speed*dir;
+  speed_right = (COEFR2L * speed)*dir;
+  motor_Left.setSpeed(speed_left); motor_Right.setSpeed(speed_right);
+  while (dir*posi < target){
+    int e = dir*target - dir*posi;
+    Serial.print(e);
+    Serial.print("||");
+    Serial.print(posi);
+    Serial.println();
+  }
+  motor_Left.setSpeed(0); motor_Right.setSpeed(0);
+  
+//delay(1000);
+  /*for (int i=0; i<3000;i++){
+    Serial.println();
+    Serial.print(posi[0]);
+    Serial.print(" || ");
+    Serial.print(posi[1]);
+    Serial.println();
+  }
+  unsigned long now = millis();
+  if (now - lastMs >= intervalMs) {
+
+    noInterrupts();
+    long cA = posi[0]; posi[0] = 0;
+    long cB = posi[1]; posi[1] = 0;
+    interrupts();
+
+    float dt = (now - lastMs) / 1000.0; // en secondes
+    float rpmL = getspeed(cA, dt);
+    float rpmR = -1*getspeed(cB, dt);
+    Serial.print(lm);
+    Serial.print(",");
+    Serial.print(rpmL);
+    Serial.print(",");
+    Serial.print(-1*rpmR);
+    Serial.println();
+
+
+    lastMs = now;
+    lm++;
+}*/

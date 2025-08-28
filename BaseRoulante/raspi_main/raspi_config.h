@@ -10,6 +10,8 @@
 #define DIAM_WHEEL  70.0 //mm
 #define nbPPR 341.2 // le nombre de pulsation des encodeurs par tour apres le réducteur 34:1
 
+#define NBMOTOR 2
+
 // ---------------PIN----------------
 
 // Pin motors Left

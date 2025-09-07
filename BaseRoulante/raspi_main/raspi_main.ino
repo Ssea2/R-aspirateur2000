@@ -25,6 +25,12 @@ int target;
 int dsec = 100; // mm
 int Lldist;
 int Rldist;
+long cL;
+long cR;
+int stoptype;
+int (*pulse2value)(int);
+float restvalue;
+float actionfaite[] = {0,0,0};
 
 float move[] = {90,500}; // roatation en degrée et translation en mm
 
@@ -44,11 +50,8 @@ void readEncoder(){
 }
 
 int dist2encodeurvalue(float distmm){
-  float nbtour = 0;
-  int nb_pulsation = 0;
-
-  nbtour = distmm/wheel_perimeter;
-  nb_pulsation = nbtour*nbPPR;
+  int nb_pulsation;
+  nb_pulsation = (distmm/wheel_perimeter)*nbPPR;
   return nb_pulsation;
 }
 
@@ -61,6 +64,19 @@ float angle2encodervalue(float angle){
   nbPulseAngle = dist2encodeurvalue(P_arc);
   return nbPulseAngle;
 }
+
+int encodeurvalue2dist(int pulse){
+  float dist;
+  dist = (pulse*wheel_perimeter)/nbPPR;
+  return dist;
+}
+float encodervalue2angle(int pulse){
+  float angle;
+  float dist = encodeurvalue2dist(pulse);
+  angle = (dist*360)/(PI*D_BETWEEN_WHEEL);
+  return angle;
+}
+
 
 float getspeed(long pos, float dtime){
   float Covers = pos/dtime;
@@ -94,10 +110,19 @@ int getStop(int sensorPin) {
   else            { return 1; }
 }
 
-bool iscollision(float dist_secu){
+bool iscollision_front(float dist_secu){
   int Lldist = getDistance(L_Distance);
   int Rldist = getDistance(R_Distance);
-  if (Lldist < dist_secu || Rldist < dist_secu || getStop(L_Collision) || getStop(R_Collision)){
+  if (Lldist < dist_secu || Rldist < dist_secu){
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool iscollision_LR(){
+  if (getStop(L_Collision) || getStop(R_Collision)){
     return true;
   }
   else {
@@ -138,11 +163,12 @@ void setup() {
 }
 
 void loop(){  
-  
+  // on itere pour la rotation puis la translation
   for (int i=0; i<2; i++){
     int action = move[i];
-    if (action !=0){
+    if (action !=0){ // si l'action vaut 0 on la skip 
       if (i==0){
+        // la direction des roues dépend de l'angle, positif on tourne dans le sans anti-horraire et vice versa
         if (action > 0){
           dirL=-1;
           dirR=1;
@@ -151,47 +177,70 @@ void loop(){
           dirL=1;
           dirR=-1;
         }
+        // on transforme l'angle en nb de pulsation
+        pulse2value=encodeurvalue2dist;
         target = angle2encodervalue(action);
       }
       else {
         dirL=1;
         dirR=1;
+        // on transforme la distance en nombre de pulsation
         target = dist2encodeurvalue(action);
+        pulse2value=encodeurvalue2dist;
       }
 
+      // pulsation a 0 avant chaque mouvement
       noInterrupts();
-      long cL = posi[0]; posi[0] = 0;
-      long cR = posi[1]; posi[1] = 0;
+      posi[0] = 0;
+      posi[1] = 0;
       interrupts();
+      // on set la vitesse 
       speed_left = dirL*speed;
       speed_right = dirR*(COEFR2L*speed + BIASR2L);
       
       while (true){
+        // recuperation des comptes de pulsation
         noInterrupts();
         cL = posi[0];
         cR = posi[1];
         interrupts();
-        Serial.println(iscollision(dsec));
-        if (fabs(cR) >= target) {
+
+        // test des condition qui meme a l'arret de la base roulante 
+        if (fabs(cR) >= target) { // action entierement faite
+          stoptype=0;
           break;  // on sort de la boucle
         }
-        else if (iscollision(dsec)){
-          motor_Left.setSpeed(0); motor_Right.setSpeed(0);
+        else if (iscollision_front(dsec)){ // distance de securite a l'avant
+          stoptype=1;
+          break;
+        }
+        else if (iscollision_LR()){ // les sswitch sur les coté du robot
+          stoptype=2;
+          break;
         }
         else {
           motor_Left.setSpeed(speed_left); motor_Right.setSpeed(speed_right);
         }
+        // on sauvegarde la distance/angle parcouru avant l'interuption
+        actionfaite[i]=pulse2value(cL);
+        // même chose mais avec le type d'interuption 0=normal, 1=collision avant, 2=collision cote
+        actionfaite[2]=stoptype;
         
         
         
       }
       motor_Left.setSpeed(0); motor_Right.setSpeed(0);
-      
+  
     }
     else {
-      Serial.println("STOP");
       motor_Left.setSpeed(0); motor_Right.setSpeed(0);
     }
   }
+  // on envoie les infos des actoin effectué en utilisant le port série
+  for (int i=0; i<3;i++){
+    Serial.print(actionfaite[i]);
+    Serial.print(",");
+  }
+  Serial.println();
 
 }
